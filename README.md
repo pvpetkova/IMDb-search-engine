@@ -1,0 +1,1 @@
+client-server app to search for movie info on IMDb using OMDb API

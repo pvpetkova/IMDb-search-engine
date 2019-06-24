@@ -1,0 +1,3 @@
+rootProject.name = 'IMDb-search-engine'
+
+include 'Server', 'Client'
