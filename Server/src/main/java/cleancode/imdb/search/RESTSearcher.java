@@ -1,5 +1,6 @@
 package cleancode.imdb.search;
 
+import cleancode.imdb.config.ConfigHandler;
 import cleancode.imdb.model.Movie;
 import cleancode.imdb.model.TVSeries;
 import org.glassfish.jersey.jackson.JacksonFeature;
@@ -16,33 +17,17 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class RESTSearcher implements Searcher {
-    private String API_URL;
     private FilePersist filePersist;
+    private WebTarget target;
 
-    public RESTSearcher(Path source) {
-        this.filePersist = new FilePersist(source);
-    }
-
-    private WebTarget target = newTarget();
-
-    private WebTarget newTarget() {
-        return ClientBuilder.newBuilder()
+    public RESTSearcher() {
+        this.filePersist = new FilePersist();
+        String API_URL = ConfigHandler.getInstance().getApiURL();
+        target = ClientBuilder.newBuilder()
                 .register(JacksonFeature.class)
                 .build()
                 .target(API_URL);
     }
-
-    public void setAPI_URL(String url) {
-        API_URL = url;
-        target = newTarget();
-    }
-//
-//    @Override
-//    public Optional<Movie> searchByName(String title) {
-//        Movie movie = getMovieFromApi(title);
-//        filePersist.saveInLocalStorage(movie);
-//        return Optional.of(movie);
-//    }
 
     @Override
     public Optional<String> searchByNameAndFields(String title, List<String> fields) {

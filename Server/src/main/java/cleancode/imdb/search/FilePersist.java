@@ -1,6 +1,9 @@
 package cleancode.imdb.search;
 
+import cleancode.imdb.config.ConfigHandler;
+import cleancode.imdb.model.Listing;
 import cleancode.imdb.model.Movie;
+import cleancode.imdb.model.TVSeries;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.BufferedWriter;
@@ -10,17 +13,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class FilePersist {
-    public FilePersist(Path source) {
-        localStorageSource = source;
+    public FilePersist() {
+        localStorageSource = ConfigHandler.getInstance().getSourceDir();
     }
 
-    public FilePersist(String source) {
-        localStorageSource = Paths.get(cleanupFileName(source));
-    }
-
-    public void saveInLocalStorage(Movie movie) {
-        try (BufferedWriter writer = Files.newBufferedWriter(resolve(movie.getTitle()))) {
-            new ObjectMapper().writeValue(writer, movie);
+    public void saveInLocalStorage(Listing listing) {
+        try (BufferedWriter writer = Files.newBufferedWriter(resolve(listing.getTitle()))) {
+            new ObjectMapper().writeValue(writer, listing);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -34,5 +33,5 @@ public class FilePersist {
         return localStorageSource.resolve(cleanupFileName(name));
     }
 
-    private final Path localStorageSource;
+    private Path localStorageSource;
 }
