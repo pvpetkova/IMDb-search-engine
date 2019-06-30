@@ -1,8 +1,6 @@
 package cleancode.imdb.search;
 
-import cleancode.imdb.model.Episode;
 import cleancode.imdb.model.Movie;
-import cleancode.imdb.model.Season;
 import cleancode.imdb.model.TVSeries;
 import org.glassfish.jersey.jackson.JacksonFeature;
 
@@ -38,19 +36,20 @@ public class RESTSearcher implements Searcher {
         API_URL = url;
         target = newTarget();
     }
-
-    @Override
-    public Optional<Movie> searchByName(String title) {
-        Movie movie = getMovieFromApi(title);
-        filePersist.saveInLocalStorage(movie);
-        return Optional.of(movie);
-    }
+//
+//    @Override
+//    public Optional<Movie> searchByName(String title) {
+//        Movie movie = getMovieFromApi(title);
+//        filePersist.saveInLocalStorage(movie);
+//        return Optional.of(movie);
+//    }
 
     @Override
     public Optional<String> searchByNameAndFields(String title, List<String> fields) {
         Movie movie = getMovieFromApi(title);
-        if (Objects.isNull(movie))
+        if (Objects.isNull(movie)) {
             return Optional.empty();
+        }
         filePersist.saveInLocalStorage(movie);
         try (BufferedReader bufferedReader = Files.newBufferedReader(filePersist.resolve(title))) {
             return Optional.of(JsonFileFilter.filterByFields(bufferedReader, fields));
@@ -61,23 +60,13 @@ public class RESTSearcher implements Searcher {
     }
 
     @Override
-    public Optional<List<Episode>> searchForEpisodesBySeason(String seriesName, int seasonNumber) {
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<Episode> searchTVEpisode(String seriesName, int seasonNumber, int episodeNumber) {
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<TVSeries> searchTVSeries(String seriesName) {
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<Season> searchSeason(String seriesName, int seasonNumber) {
-        return Optional.empty();
+    public Optional<String> searchTVSeries(String seriesName) {
+        TVSeries series = getTVSeriesFromApi(seriesName);
+        if (Objects.isNull(series)) {
+            return Optional.empty();
+        }
+        filePersist.saveInLocalStorage(series);
+        return Optional.of(series.toString());
     }
 
     private Movie getMovieFromApi(String title) {
@@ -87,5 +76,11 @@ public class RESTSearcher implements Searcher {
                 .get(Movie.class);
     }
 
-    //TODO: logic for using the OMDb API
+    private TVSeries getTVSeriesFromApi(String seriesName) {
+        return target.queryParam("t", seriesName)
+                .queryParam("type", "series")
+                .request()
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .get(TVSeries.class);
+    }
 }
