@@ -13,6 +13,7 @@ public class ConfigHandler {
     private int port;
     private int threadsNumber;
     private String apiKey;
+    private String apiURL;
     private Path sourceDir;
 
     private static ConfigHandler instance;
@@ -23,6 +24,7 @@ public class ConfigHandler {
         port = Integer.valueOf(properties.getProperty("server.port", "8888"));
         threadsNumber = Integer.valueOf(properties.getProperty("server.threadsNumber", "1"));
         apiKey = properties.getProperty("apiKey");
+        apiURL = properties.getProperty("apiUrl");
         sourceDir = Paths.get(properties.getProperty("source.dir"));
     }
 
@@ -51,6 +53,10 @@ public class ConfigHandler {
 
     public String getApiKey() {
         return apiKey;
+    }
+
+    public String getApiURL() {
+        return apiURL;
     }
 
     public Path getSourceDir() {
