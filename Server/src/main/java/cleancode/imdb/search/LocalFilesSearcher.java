@@ -14,8 +14,8 @@ import java.util.Optional;
 public class LocalFilesSearcher implements Searcher {
     private FilePersist filePersist;
 
-    public LocalFilesSearcher(Path source) {
-        this.filePersist = new FilePersist(source);
+    public LocalFilesSearcher() {
+        this.filePersist = new FilePersist();
     }
 
 //    private static Movie toMovieObject(File file) {
