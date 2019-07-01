@@ -1,35 +1,28 @@
 package cleancode.imdb.server;
 
 import cleancode.imdb.config.ConfigHandler;
-import cleancode.imdb.search.RESTSearcher;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Server implements Runnable {
-    private static ConfigHandler configHandler;
     private final ExecutorService mExecutorService;
     private ServerSocket mServerSocket;
 
-    private Server(ServerSocket aServerSocket, int aThreadsNumber) {
-        mServerSocket = aServerSocket;
-        mExecutorService = Executors.newFixedThreadPool(aThreadsNumber);
-        configHandler = ConfigHandler.getInstance();
+    private Server(ServerSocket socket, int threadsNumber) {
+        mServerSocket = socket;
+        mExecutorService = Executors.newFixedThreadPool(threadsNumber);
     }
 
     public static void main(String[] args) {
         Server server;
         try {
-            ServerSocket serverSocket = new ServerSocket(configHandler.getPort());
-            server = new Server(serverSocket, configHandler.getThreadsNumber());
+            ServerSocket serverSocket = new ServerSocket(ConfigHandler.getInstance().getPort());
+            server = new Server(serverSocket, ConfigHandler.getInstance().getThreadsNumber());
             Thread thread = new Thread(server);
             thread.start();
         } catch (IOException e) {
@@ -42,6 +35,7 @@ public class Server implements Runnable {
         try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in))) {
             do {
                 line = bufferedReader.readLine();
+                System.out.println(line);
             } while (line != null && !line.trim().equals("stop"));
         } catch (IOException e) {
             System.out.println("Error occurred while reading from the standard input.");
