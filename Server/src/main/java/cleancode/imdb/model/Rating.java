@@ -1,8 +1,17 @@
 package cleancode.imdb.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Rating {
-    //TODO: model ratings fields
+    @JsonProperty(value = "Source")
     private String source;
+    @JsonProperty(value = "Value")
     private String value;
 
     public String getSource() {
