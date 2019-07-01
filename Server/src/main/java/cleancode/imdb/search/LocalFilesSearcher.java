@@ -1,10 +1,6 @@
 package cleancode.imdb.search;
 
-import cleancode.imdb.model.Movie;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -17,24 +13,6 @@ public class LocalFilesSearcher implements Searcher {
     public LocalFilesSearcher() {
         this.filePersist = new FilePersist();
     }
-
-//    private static Movie toMovieObject(File file) {
-//        try {
-//            return new ObjectMapper().readValue(file, Movie.class);
-//        } catch (IOException a) {
-//            a.printStackTrace();
-//            return null;
-//        }
-//    }
-//
-//    @Override
-//    public Optional<Movie> searchByName(String title) {
-//        Path file = filePersist.resolve(filePersist.cleanupFileName(title));
-//        if (Files.exists(file)) {
-//            return Optional.ofNullable(toMovieObject(file.toFile()));
-//        }
-//        return Optional.empty();
-//    }
 
     @Override
     public Optional<String> searchByNameAndFields(String title, List<String> fields) {
@@ -54,8 +32,8 @@ public class LocalFilesSearcher implements Searcher {
     @Override
     public Optional<String> searchTVSeries(String seriesName) {
         Path file = filePersist.resolve(filePersist.cleanupFileName(seriesName));
-        if(Files.exists(file)) {
-            try(BufferedReader fileReader = Files.newBufferedReader(file)) {
+        if (Files.exists(file)) {
+            try (BufferedReader fileReader = Files.newBufferedReader(file)) {
                 StringBuilder builder = new StringBuilder();
                 String line;
                 while ((line = fileReader.readLine()) != null) {
